@@ -1,0 +1,43 @@
+// = quick GitLab + Jenkins test infrastructure in Docker
+= quick GoGs + Jenkins test infrastructure in Docker
+
+1) start all
+
+[source,bash]
+----
+docker-compose up
+----
+
+2) copy jenkins initial administration password from terminal,
+   go to http://127.0.0.1:18080/ paste it here and install recommended plugins...
+
+3) while jenkins doing setupping go to http://127.0.0.1:13000/
+
+4) install with postgres database:
+   host = p.daggerok.com,
+   port = 5432,
+   db = gogs,
+   user = gogs,
+   password = gogs
+
+5) setup correct public url, like http://g.daggerok.cm:13000/
+
+4) create gogs admin user
+
+5) back to jenkins and after it finish intalling plugins, create jenkins admin user
+
+6) when you done with development, just stop docker-compos, so later you can continue with same command from first point
+
+[source,bash]
+----
+docker-compose down
+----
+
+links:
+
+// . link:https://docs.gitlab.com/ce/[Gitlab CE]
+// . link:https://docs.gitlab.com/omnibus/docker/#install-gitlab-using-docker-compose[Install Gitlab]
+. link:https://hub.docker.com/_/postgres/[Install Postgres]
+. link:https://github.com/gogs/gogs/tree/master/docker/[Install GoGs]
+. link:https://github.com/jenkinsci/docker/[Install Jenkins]
+. link:https://jenkins.io/[Jenkins]

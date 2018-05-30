@@ -1,0 +1,71 @@
+version: '2.1'
+
+services:
+
+  postgres:
+    restart: always
+    image: 'postgres:9.6-alpine'
+    hostname: 'p.daggerok.com'
+    environment:
+      POSTGRES_DB: gogs
+      POSTGRES_USER: gogs
+      POSTGRES_PASSWORD: gogs
+    ports:
+      - '15432:5432'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+    networks:
+      main:
+        aliases:
+          - p
+          - postgres
+          - p.daggerok.com
+          - postgres.daggerok.com
+
+  # mkdir -p ./data/gogs
+  # cp -Rf ~/.ssh ./data/gogs/ssh
+  gogs:
+    restart: always
+    links:
+      - 'postgres:postgres'
+    image: 'gogs/gogs:0.11.43'
+    hostname: 'g.daggerok.com'
+    ports:
+      - '10022:22'
+      - '13000:3000'
+    volumes:
+      - 'gogs:/var/gogs/git'
+      - 'gogs:/var/gogs/ssh'
+      - 'gogs:/var/gogs/gogs'
+    networks:
+      main:
+        aliases:
+          - g
+          - gogs
+          - g.daggerok.com
+          - gogs.daggerok.com
+
+  jenkins:
+    restart: always
+    image: 'jenkins/jenkins:2.125-alpine'
+    hostname: 'j.daggerok.com'
+    ports:
+      - '18080:8080'
+      - '50000:50000'
+    volumes:
+      - 'jenkins:/var/jenkins_home'
+    networks:
+      main:
+        aliases:
+          - j
+          - jenkins
+          - j.daggerok.com
+          - jenkins.daggerok.com
+
+volumes:
+  postgres:
+  gogs:
+  jenkins:
+
+networks:
+  main:
