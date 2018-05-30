@@ -22,8 +22,6 @@ services:
           - p.daggerok.com
           - postgres.daggerok.com
 
-  # mkdir -p ./data/gogs
-  # cp -Rf ~/.ssh ./data/gogs/ssh
   gogs:
     restart: always
     links:
