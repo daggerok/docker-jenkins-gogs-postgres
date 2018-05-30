@@ -71,16 +71,34 @@ networks:
 docker-compose up
 ----
 
-copy jenkins initial administration password from terminal,
+.copy jenkins initial administration password from terminal (826524f963304870bea53ce9ccafead5):
+[source,bash]
+----
+jenkins_1   | *************************************************************
+jenkins_1   | *************************************************************
+jenkins_1   | *************************************************************
+jenkins_1   |
+jenkins_1   | Jenkins initial setup is required. An admin user has been created and a password generated.
+jenkins_1   | Please use the following password to proceed to installation:
+jenkins_1   |
+jenkins_1   | 826524f963304870bea53ce9ccafead5
+jenkins_1   |
+jenkins_1   | This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+jenkins_1   |
+jenkins_1   | *************************************************************
+jenkins_1   | *************************************************************
+jenkins_1   | *************************************************************
+----
+
 go to http://jenkins.daggerok.com:18080/ paste it here and click on install recommended plugins...
 
 while jenkins doing it's job, go to http://gogs.daggerok.com:13000/
 
 install with postgres database:
-  host = postgres.daggerok.com,
-  port = 5432,
-  db name = gogs,
-  db user = gogs,
+  host = postgres.daggerok.com
+  port = 5432
+  db name = gogs
+  db user = gogs
   db user password = gogs
 
 setup correct public url, like http://gogs.daggerok.com:13000/
