@@ -1,37 +1,101 @@
-// = quick GitLab + Jenkins test infrastructure in Docker
-= Quick Go Git server (GoGS) + Jenkins all in Docker
+// = Quick test infrastructure using GitLab + Jenkins in Docker - fack, no! Gitlab don't wanna work in my compose...
+= Quick test infrastructure using Go Git server (GoGS) + Jenkins all in Docker
 
-1) start all
+.prepare OS:
+[source,bash]
+----
+echo "postgres.daggerok.com 127.0.0.1" >> /etc/hosts
+echo "gogs.daggerok.com 127.0.0.1"     >> /etc/hosts
+echo "jenkins.daggerok.com 127.0.0.1"  >> /etc/hosts
+----
 
+.prepare docker-conpose file:
+[source,yaml]
+----
+version: '2.1'
+
+services:
+
+  postgres:
+    image: 'postgres:9.6-alpine'
+    environment:
+      POSTGRES_DB: gogs
+      POSTGRES_USER: gogs
+      POSTGRES_PASSWORD: gogs
+    ports: ['15432:5432']
+    volumes: ['postgres:/var/lib/postgresql/data']
+    networks:
+      main:
+        aliases: ['postgres.daggerok.com']
+    restart: always
+
+  gogs:
+    image: 'gogs/gogs:0.11.43'
+    ports:
+      - '10022:22'
+      - '13000:3000'
+    volumes:
+      - 'gogs:/var/gogs/git'
+      - 'gogs:/var/gogs/ssh'
+      - 'gogs:/var/gogs/gogs'
+    links:
+      - 'postgres:postgres'
+    networks:
+      main:
+        aliases: ['gogs.daggerok.com']
+    restart: always
+
+  jenkins:
+    image: 'jenkins/jenkins:2.125-alpine'
+    ports:
+      - '18080:8080'
+      - '50000:50000'
+    volumes: ['jenkins:/var/jenkins_home']
+    networks:
+      main:
+        aliases: ['jenkins.daggerok.com']
+    restart: always
+
+volumes:
+  postgres:
+  gogs:
+  jenkins:
+
+networks:
+  main:
+----
+
+.start everything:
 [source,bash]
 ----
 docker-compose up
 ----
 
-2) copy jenkins initial administration password from terminal,
-   go to http://127.0.0.1:18080/ paste it here and install recommended plugins...
+copy jenkins initial administration password from terminal,
+go to http://jenkins.daggerok.com:18080/ paste it here and click on install recommended plugins...
 
-3) while jenkins doing setupping go to http://127.0.0.1:13000/
+while jenkins doing it's job, go to http://gogs.daggerok.com:13000/
 
-4) install with postgres database:
-   host = p.daggerok.com,
-   port = 5432,
-   db = gogs,
-   user = gogs,
-   password = gogs
+install with postgres database:
+  host = postgres.daggerok.com,
+  port = 5432,
+  db name = gogs,
+  db user = gogs,
+  db user password = gogs
 
-5) setup correct public url, like http://g.daggerok.cm:13000/
+setup correct public url, like http://gogs.daggerok.com:13000/
 
-4) create gogs admin user
+create gogs admin user
 
-5) back to jenkins and after it finish intalling plugins, create jenkins admin user
+back to jenkins and create jenkins admin user after it finish intalling plugins
 
-6) when you done with development, just stop docker-compos, so later you can continue with same command from first point
-
+.when you done with development, just stop docker-compos
 [source,bash]
 ----
 docker-compose down
 ----
+
+so later you can continue with same command from first point
 
 links:
 
