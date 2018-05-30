@@ -1,5 +1,5 @@
 // = quick GitLab + Jenkins test infrastructure in Docker
-= quick GoGs + Jenkins test infrastructure in Docker
+= Quick Go Git server (GoGS) + Jenkins all in Docker
 
 1) start all
 
